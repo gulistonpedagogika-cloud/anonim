@@ -171,9 +171,18 @@ async function startServer() {
   
   const app = express();
   const PORT = process.env.PORT || 3000;
-  console.log(`Starting server in ${process.env.NODE_ENV || 'development'} mode...`);
+  console.log(`Starting server in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}...`);
+
+  // Global request logger
+  app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+  });
 
   app.use(express.json());
+
+  // Health check
+  app.get("/health", (req, res) => res.send("OK"));
 
   // --- API Routes ---
 
