@@ -170,7 +170,7 @@ async function startServer() {
   await initDatabase();
   
   const app = express();
-  const PORT = process.env.PORT || 3000;
+  const PORT = Number(process.env.PORT) || 3000;
   console.log(`Starting server in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}...`);
 
   // Global request logger
@@ -390,7 +390,13 @@ async function startServer() {
 
   app.use("/api", (err: any, req: any, res: any, next: any) => {
     console.error("API Error:", err);
-    res.status(500).json({ error: "Ichki server xatoligi yuz berdi." });
+    res.status(500).json({ error: "Ichki server xatoligi yuz berdi.", details: err.message });
+  });
+
+  // Global error handler for the whole app
+  app.use((err: any, req: any, res: any, next: any) => {
+    console.error("Global Server Error:", err);
+    res.status(500).send("Serverda kutilmagan xatolik yuz berdi.");
   });
 
   if (process.env.NODE_ENV !== "production") {
