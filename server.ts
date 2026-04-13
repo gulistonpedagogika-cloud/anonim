@@ -171,12 +171,14 @@ async function startServer() {
   
   const app = express();
   const PORT = process.env.PORT || 3000;
+  console.log(`Starting server in ${process.env.NODE_ENV || 'development'} mode...`);
 
   app.use(express.json());
 
   // --- API Routes ---
 
   app.get("/api/db-status", (req, res) => {
+    console.log("API Hit: /api/db-status");
     res.json({ 
       type: dbType, 
       host: dbType === "mysql" ? (process.env.DB_HOST || "127.0.0.1") : "local (sqlite)",
