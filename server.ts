@@ -175,6 +175,9 @@ async function startServer() {
 
   // Global request logger
   app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
     next();
   });
@@ -182,7 +185,10 @@ async function startServer() {
   app.use(express.json());
 
   // Health check
-  app.get("/health", (req, res) => res.send("OK"));
+  app.get("/health", (req, res) => {
+    console.log("Health check hit!");
+    res.send("SERVER_IS_ALIVE");
+  });
 
   // --- API Routes ---
 
